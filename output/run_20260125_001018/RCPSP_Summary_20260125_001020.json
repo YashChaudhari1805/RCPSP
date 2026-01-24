@@ -1,9 +1,9 @@
 {
-  "timestamp": "2026-01-24T23:28:39.320455",
+  "timestamp": "2026-01-25T00:10:20.080068",
   "makespan": 14,
   "cpu_time_seconds": 0.015625,
-  "wall_time_seconds": 0.254832,
-  "build_time_seconds": 0.012137,
+  "wall_time_seconds": 0.100687,
+  "build_time_seconds": 0.013543,
   "num_activities": 10,
   "num_resources": 0,
   "num_precedence_relations": 6,

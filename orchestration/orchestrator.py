@@ -33,20 +33,17 @@ class RCPSPOrchestrator:
         self.validator = validator
         self.solver = solver
         
-        # Fix: Use provided configs or fall back to defaults
         self.output_config = output_config or OutputConfig()
         self.viz_config = visualization_config or VisualizationConfig()
         self.output_base_dir = self.output_config.BASE_DIR
         
         # Visualization components
-        # Fix: Pass configs to renderers
         self.flowchart_gen = FlowchartGenerator(self.output_config)
         self.gantt_renderer = GanttChartRenderer(self.viz_config, self.output_config)
         self.resource_renderer = ResourceUtilizationRenderer(self.viz_config, self.output_config)
         self.metrics_renderer = SummaryMetricsRenderer(self.viz_config, self.output_config)
         
         # Export components
-        # Fix: Pass config to exporters
         self.excel_exporter = ExcelExporter(self.output_config)
         self.text_exporter = TextExporter(self.output_config)
         self.json_exporter = JSONExporter(self.output_config)
@@ -69,12 +66,8 @@ class RCPSPOrchestrator:
         print("=" * 70)
         print(f"Output directory: {run_dir}\n")
         
-        # Generate flowchart
-        print("--- Generating Program Flowchart ---")
-        self.flowchart_gen.generate(run_dir)
-        
         # Load data
-        print("\n--- Loading Input Data ---")
+        print("--- Loading Input Data ---")
         try:
             data = self.data_loader.load(excel_path)
         except Exception as e:
@@ -91,6 +84,15 @@ class RCPSPOrchestrator:
             return RunResult.failed("Data validation failed")
         
         print("✓ Data validation passed")
+
+        # Generate flowchart (Now using loaded data)
+        print("\n--- Generating Project Network Diagram ---")
+        try:
+            self.flowchart_gen.generate(data, run_dir)
+        except Exception as e:
+            # Don't fail the whole run if visualization fails
+            logger.error(f"Failed to generate network diagram: {e}")
+            print(f"⚠ Warning: Could not generate network diagram: {e}")
         
         # Solve
         print("\n--- Solving Optimization Problem ---")
@@ -111,7 +113,7 @@ class RCPSPOrchestrator:
         export_paths = self._export_results(solver_results, data, run_dir)
         
         # Summary
-        self._print_summary(run_dir, vis_paths, export_paths)
+        self._print_summary(run_dir, vis_paths, export_paths, self.output_config)
         
         return RunResult.succeeded(solver_results, vis_paths, export_paths)
     
@@ -161,15 +163,15 @@ class RCPSPOrchestrator:
             "json": json_path
         }
     
-    def _print_summary(self, run_dir, vis_paths, export_paths):
+    @staticmethod
+    def _print_summary(run_dir, vis_paths, export_paths, output_config):
         """Print summary of outputs."""
         print("\n" + "=" * 70)
         print("--- OUTPUT SUMMARY ---")
         print("=" * 70)
         
-        # Fix: Use dynamic flowchart name from config
-        print("\n📈 Flowchart:")
-        print(f"  • {run_dir / self.output_config.FLOWCHART_NAME}")
+        print("\n📈 Flowchart (Network Diagram):")
+        print(f"  • {run_dir / output_config.FLOWCHART_NAME}")
         
         print("\n📊 Gantt Charts (Paged):")
         if vis_paths["gantt_pages"]:

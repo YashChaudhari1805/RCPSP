@@ -14,3 +14,51 @@
 2026-01-24 23:28:39,318 - INFO - Excel report saved: output\run_20260124_232835\RCPSP_Results_20260124_232839.xlsx
 2026-01-24 23:28:39,319 - INFO - Text report saved: output\run_20260124_232835\RCPSP_Results_20260124_232839.txt
 2026-01-24 23:28:39,321 - INFO - JSON summary saved: output\run_20260124_232835\RCPSP_Summary_20260124_232839.json
+2026-01-25 00:05:20,414 - INFO - Loading data from D:\RCPSP-MILP Solver\uploads\Sample Input 2.xlsx
+2026-01-25 00:05:20,655 - INFO - Detected single-sheet format
+2026-01-25 00:05:20,665 - INFO - Data loaded successfully
+2026-01-25 00:05:20,667 - INFO - Data validation passed
+2026-01-25 00:05:22,042 - INFO - Network diagram saved to output\run_20260125_000520\Program_Flowchart.png
+2026-01-25 00:05:22,043 - INFO - Starting RCPSP optimization
+2026-01-25 00:05:22,084 - INFO - Model built with 28 constraints in 0.04s
+2026-01-25 00:05:22,084 - INFO - Solving MILP model...
+2026-01-25 00:05:22,181 - INFO - Solver status: Optimal | CPU: 0.000s | Wall: 0.096s
+2026-01-25 00:05:22,181 - INFO - Optimal makespan: 14
+2026-01-25 00:05:22,398 - INFO - Gantt chart page 1 saved: output\run_20260125_000520\Gantt_Chart_20260125_000522_P1.png
+2026-01-25 00:05:22,398 - WARNING - No renewable resources to plot
+2026-01-25 00:05:22,846 - INFO - Summary metrics chart saved: output\run_20260125_000520\Summary_Metrics_20260125_000522.png
+2026-01-25 00:05:22,884 - INFO - Excel report saved: output\run_20260125_000520\RCPSP_Results_20260125_000522.xlsx
+2026-01-25 00:05:22,886 - INFO - Text report saved: output\run_20260125_000520\RCPSP_Results_20260125_000522.txt
+2026-01-25 00:05:22,888 - INFO - JSON summary saved: output\run_20260125_000520\RCPSP_Summary_20260125_000522.json
+2026-01-25 00:07:33,427 - INFO - Loading data from D:\RCPSP-MILP Solver\uploads\Sample Input 2.xlsx
+2026-01-25 00:07:33,592 - INFO - Detected single-sheet format
+2026-01-25 00:07:33,598 - INFO - Data loaded successfully
+2026-01-25 00:07:33,599 - INFO - Data validation passed
+2026-01-25 00:07:34,035 - INFO - Network diagram saved to output\run_20260125_000733\Program_Flowchart.png
+2026-01-25 00:07:34,036 - INFO - Starting RCPSP optimization
+2026-01-25 00:07:34,050 - INFO - Model built with 28 constraints in 0.01s
+2026-01-25 00:07:34,051 - INFO - Solving MILP model...
+2026-01-25 00:07:34,153 - INFO - Solver status: Optimal | CPU: 0.031s | Wall: 0.102s
+2026-01-25 00:07:34,154 - INFO - Optimal makespan: 14
+2026-01-25 00:07:34,399 - INFO - Gantt chart page 1 saved: output\run_20260125_000733\Gantt_Chart_20260125_000734_P1.png
+2026-01-25 00:07:34,400 - WARNING - No renewable resources to plot
+2026-01-25 00:07:34,812 - INFO - Summary metrics chart saved: output\run_20260125_000733\Summary_Metrics_20260125_000734.png
+2026-01-25 00:07:34,853 - INFO - Excel report saved: output\run_20260125_000733\RCPSP_Results_20260125_000734.xlsx
+2026-01-25 00:07:34,859 - INFO - Text report saved: output\run_20260125_000733\RCPSP_Results_20260125_000734.txt
+2026-01-25 00:07:34,863 - INFO - JSON summary saved: output\run_20260125_000733\RCPSP_Summary_20260125_000734.json
+2026-01-25 00:10:18,673 - INFO - Loading data from D:\RCPSP-MILP Solver\uploads\Sample Input 2.xlsx
+2026-01-25 00:10:18,832 - INFO - Detected single-sheet format
+2026-01-25 00:10:18,840 - INFO - Data loaded successfully
+2026-01-25 00:10:18,840 - INFO - Data validation passed
+2026-01-25 00:10:19,248 - INFO - Network diagram saved to output\run_20260125_001018\Program_Flowchart.png
+2026-01-25 00:10:19,248 - INFO - Starting RCPSP optimization
+2026-01-25 00:10:19,262 - INFO - Model built with 28 constraints in 0.01s
+2026-01-25 00:10:19,263 - INFO - Solving MILP model...
+2026-01-25 00:10:19,364 - INFO - Solver status: Optimal | CPU: 0.016s | Wall: 0.101s
+2026-01-25 00:10:19,364 - INFO - Optimal makespan: 14
+2026-01-25 00:10:19,601 - INFO - Gantt chart page 1 saved: output\run_20260125_001018\Gantt_Chart_20260125_001019_P1.png
+2026-01-25 00:10:19,602 - WARNING - No renewable resources to plot
+2026-01-25 00:10:20,039 - INFO - Summary metrics chart saved: output\run_20260125_001018\Summary_Metrics_20260125_001019.png
+2026-01-25 00:10:20,077 - INFO - Excel report saved: output\run_20260125_001018\RCPSP_Results_20260125_001020.xlsx
+2026-01-25 00:10:20,079 - INFO - Text report saved: output\run_20260125_001018\RCPSP_Results_20260125_001020.txt
+2026-01-25 00:10:20,080 - INFO - JSON summary saved: output\run_20260125_001018\RCPSP_Summary_20260125_001020.json

@@ -2,11 +2,11 @@
 RCPSP OPTIMIZATION RESULTS
 ======================================================================
 
-Timestamp: 2026-01-24 23:28:39
+Timestamp: 2026-01-25 00:10:20
 Makespan: 14
 CPU Time (s): 0.015625
-Wall Time (s): 0.254832
-Build Time (s): 0.012137
+Wall Time (s): 0.100687
+Build Time (s): 0.013543
 
 --- SCHEDULE ---
 Activity        Dur    Start      Finish    
