@@ -14,5 +14,3 @@ class OutputConfig:
     SUMMARY_METRICS_PREFIX: str = "Summary_Metrics"
     
     EXCEL_PREFIX: str = "RCPSP_Results"
-    TEXT_PREFIX: str = "RCPSP_Results"
-    JSON_PREFIX: str = "RCPSP_Summary"

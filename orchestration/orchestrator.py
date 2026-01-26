@@ -10,7 +10,7 @@ from visualization import (
     ResourceUtilizationRenderer,
     SummaryMetricsRenderer
 )
-from export import ExcelExporter, TextExporter, JSONExporter
+from export import ExcelExporter
 from .run_result import RunResult
 from utils import now_stamp, safe_mkdir
 from config import OutputConfig, VisualizationConfig
@@ -45,8 +45,6 @@ class RCPSPOrchestrator:
         
         # Export components
         self.excel_exporter = ExcelExporter(self.output_config)
-        self.text_exporter = TextExporter(self.output_config)
-        self.json_exporter = JSONExporter(self.output_config)
     
     def run(self, excel_path: str) -> RunResult:
         """
@@ -85,12 +83,11 @@ class RCPSPOrchestrator:
         
         print("✓ Data validation passed")
 
-        # Generate flowchart (Now using loaded data)
+        # Generate flowchart
         print("\n--- Generating Project Network Diagram ---")
         try:
             self.flowchart_gen.generate(data, run_dir)
         except Exception as e:
-            # Don't fail the whole run if visualization fails
             logger.error(f"Failed to generate network diagram: {e}")
             print(f"⚠ Warning: Could not generate network diagram: {e}")
         
@@ -150,17 +147,12 @@ class RCPSPOrchestrator:
         }
     
     def _export_results(self, results, data, run_dir):
-        """Export results to all formats."""
+        """Export results to Excel."""
         timestamp = now_stamp()
-        
         excel_path = self.excel_exporter.export(results, data, run_dir, timestamp)
-        text_path = self.text_exporter.export(results, data, run_dir, timestamp)
-        json_path = self.json_exporter.export(results, data, run_dir, timestamp)
         
         return {
-            "excel": excel_path,
-            "text": text_path,
-            "json": json_path
+            "excel": excel_path
         }
     
     @staticmethod
@@ -186,7 +178,5 @@ class RCPSPOrchestrator:
         
         print("\n📄 Data Exports:")
         print(f"  • Excel: {export_paths['excel']}")
-        print(f"  • Text:  {export_paths['text']}")
-        print(f"  • JSON:  {export_paths['json']}")
         
         print("\n✓ COMPLETED SUCCESSFULLY")

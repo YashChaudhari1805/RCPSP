@@ -62,3 +62,17 @@
 2026-01-25 00:10:20,077 - INFO - Excel report saved: output\run_20260125_001018\RCPSP_Results_20260125_001020.xlsx
 2026-01-25 00:10:20,079 - INFO - Text report saved: output\run_20260125_001018\RCPSP_Results_20260125_001020.txt
 2026-01-25 00:10:20,080 - INFO - JSON summary saved: output\run_20260125_001018\RCPSP_Summary_20260125_001020.json
+2026-01-25 23:21:31,312 - INFO - Loading data from D:\RCPSP-MILP Solver\converted_excel_files\j1201_1.xlsx
+2026-01-25 23:21:31,490 - INFO - Detected single-sheet format
+2026-01-25 23:21:31,510 - ERROR - Error loading Excel file: Single-sheet format requires columns {'Duration', 'ActivityID'}. Found: ['Project Nr', '# Jobs', 'Rel Date', 'Due Date', 'Tard Cost', 'MPM Time']
+2026-01-25 23:21:31,510 - ERROR - Failed to load data: Failed to load Excel file: Single-sheet format requires columns {'Duration', 'ActivityID'}. Found: ['Project Nr', '# Jobs', 'Rel Date', 'Due Date', 'Tard Cost', 'MPM Time']
+2026-01-25 23:31:36,376 - INFO - Loading data from D:\RCPSP-MILP Solver\converted_excel_files\j1201_1.xlsx
+2026-01-25 23:31:36,616 - INFO - Detected PSPLIB format
+2026-01-25 23:31:36,681 - INFO - Remapping PSPLIB nodes: 1->0, 122->N
+2026-01-25 23:31:36,682 - INFO - Data loaded successfully
+2026-01-25 23:31:36,682 - INFO - Data validation passed
+2026-01-25 23:31:40,835 - INFO - Network diagram saved to output\run_20260125_233136\Program_Flowchart.png
+2026-01-25 23:31:40,836 - INFO - Starting RCPSP optimization
+2026-01-25 23:31:45,976 - INFO - Model built with 3097 constraints in 5.14s
+2026-01-25 23:31:45,977 - INFO - Solving MILP model...
+2026-01-25 23:36:49,438 - INFO - Solver status: Not Solved | CPU: 1.906s | Wall: 303.461s
