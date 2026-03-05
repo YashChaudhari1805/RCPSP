@@ -1,0 +1,7 @@
+# Exclude input excel files
+input_files/
+
+# Exclude output results
+output/
+
+uploads/
