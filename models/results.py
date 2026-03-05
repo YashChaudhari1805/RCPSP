@@ -31,13 +31,21 @@ class SolverResults:
     build_time: float
     status: str
     
+    # Canonical status strings used throughout the codebase
+    _OPTIMAL_STATUS = "Optimal"
+    _FEASIBLE_STATUSES = frozenset({"Feasible", "Feasible (Heuristic)"})
+    
     def is_optimal(self) -> bool:
         """Check if solution is optimal."""
-        return self.status == "Optimal"
+        return self.status == self._OPTIMAL_STATUS
 
     def is_feasible(self) -> bool:
-        """Check if solution is feasible (but maybe not optimal)."""
-        return self.status.startswith("Feasible")
+        """Check if solution is feasible (but maybe not optimal).
+        
+        Fix #9: Changed from fragile startswith("Feasible") to an explicit
+        set membership check so only known feasible statuses match.
+        """
+        return self.status in self._FEASIBLE_STATUSES
     
     def is_success(self) -> bool:
         """Check if solver succeeded (Optimal or Feasible)."""

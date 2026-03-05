@@ -14,3 +14,5 @@ class OutputConfig:
     SUMMARY_METRICS_PREFIX: str = "Summary_Metrics"
     
     EXCEL_PREFIX: str = "RCPSP_Results"
+    JSON_PREFIX: str = "RCPSP_Summary"   # Fix #1: was missing, caused AttributeError
+    TEXT_PREFIX: str = "RCPSP_Results"   # Fix #1: was missing, caused AttributeError
