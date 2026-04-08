@@ -89,8 +89,3 @@ Results are saved in a folder named `<input_filename>_<timestamp>/`:
 * **`Gantt_Chart_*.png`**: Readable project schedules.
 * **`Resource_Profile.png`**: Time-phased resource usage vs. capacity.
 * **`Program_Flowchart.png`**: Network dependency diagram.
-
----
-
-## 📝 License
-This project is open-source and available under the **MIT License**.
