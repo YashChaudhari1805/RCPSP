@@ -1,167 +1,96 @@
-Based on the code structure and logic contained in the uploaded files, here is a comprehensive and detailed `README.md` for the project.
-
----
-
 # RCPSP Solver - Industrial Version
 
 ## 📖 Overview
+The **RCPSP Solver (Industrial Version)** is a professional-grade Python application designed to solve the **Resource-Constrained Project Scheduling Problem (RCPSP)**. It utilizes Mixed-Integer Linear Programming (MILP) and advanced heuristics to find optimal or near-optimal project schedules that minimize makespan while strictly adhering to precedence constraints and resource availability.
 
-The **RCPSP Solver (Industrial Version)** is a robust, modular Python application designed to solve the **Resource-Constrained Project Scheduling Problem (RCPSP)**. It utilizes Mixed-Integer Linear Programming (MILP) to find optimal project schedules that minimize makespan while strictly adhering to precedence constraints and limited resource availability.
+Unlike standard academic implementations, this project is engineered for **industrial scale**, featuring a modular architecture, strong type safety, iterative validation, and paginated visualizations for large projects.
 
-Unlike academic scripts, this project is engineered for **industrial use**, featuring separation of concerns, strong type safety, extensive validation, paginated visualizations for large projects, and support for multiple input formats.
+---
 
 ## ✨ Key Features
-
-* **Optimization Engine**: Uses `PuLP` with the CBC solver to guarantee optimal or near-optimal solutions based on a configurable time limit.
-* **Flexible Inputs**: Automatically detects and parses three different Excel formats: PSPLIB (academic standard), Multi-sheet (Activities/Precedence), and Single-sheet.
+* **Tiered Optimization Strategy**: Automatically selects the best solving method based on project size:
+    * **Exact ($n \le 30$ tasks)**: Pure MILP for guaranteed optimality.
+    * **Hybrid ($31–120$ tasks)**: Combines a greedy seed with an MILP improvement pass.
+    * **Heuristic ($n > 120$ tasks)**: High-speed greedy scheduling for very large projects.
+* **Optimized MILP Engine**: Uses a time-indexed $x_{a,t}$ formulation with **CPM-based variable pruning** (ES-bounded), reducing the search space by up to 50% compared to traditional models.
+* **Automated Validation**: Includes iterative cycle detection (Kahn’s algorithm) and data schema validation before solving.
 * **Advanced Visualization**:
-* **Paginated Gantt Charts**: Automatically splits large schedules across multiple images for readability.
-* **Network Diagrams**: Generates flowcharts of the project network.
-* **Resource Utilization**: Visualizes resource consumption over time.
+    * **Paginated Gantt Charts**: Splits large schedules across multiple high-resolution images.
+    * **Resource Profiles**: Visualizes renewable resource consumption versus capacity over time.
+    * **Network Diagrams**: Automatically generates flowcharts of task dependencies.
 
+---
 
-* **Robust Architecture**: Implements Clean Architecture principles with strict separation between Input, Model, Solver, and Visualization layers.
-* **Validation**: Includes cycle detection and data schema validation before attempting to solve.
-
-## 📂 Project Structure
-
-The codebase is organized into focused modules to ensure maintainability and testability:
-
-```text
-rcpsp_solver/
-├── cli/                 # Command Line Interface entry point
-├── config/              # Centralized configuration (Models, Output, Viz)
-├── export/              # Exporters for Excel, JSON, and Text formats
-├── input/               # Data loaders (Excel, PSPLIB parsers)
-├── models/              # Dataclasses (Activity, Resource, ProjectData)
-├── orchestration/       # Main workflow controller (Load -> Solve -> Viz)
-├── solver/              # MILP implementation using PuLP
-├── utils/               # Logging, file handling, and time utilities
-├── validation/          # Cycle detection and data integrity checks
-└── visualization/       # Matplotlib-based renderers (Gantt, Charts)
-
-```
-
-## 🚀 Installation
+## 🚀 Installation & Execution
 
 ### Prerequisites
-
-* Python 3.8 or higher
-* pip (Python package manager)
+* Python 3.8+
+* Pip (Python package manager)
 
 ### Dependencies
-
-Install the required libraries:
-
 ```bash
 pip install pandas pulp matplotlib openpyxl networkx
-
 ```
 
-*Note: The COIN-OR CBC solver is usually included with PuLP, but on some Linux distributions, you may need to install it separately (e.g., `sudo apt-get install coinor-cbc`).*
-
-## 💻 Usage
-
-The project is executed via the Command Line Interface (CLI).
-
-### Basic Command
-
-Run the solver on an Excel file using default settings:
-
+### Execution (Entry Point)
+The project is executed via the CLI module:
 ```bash
-python -m cli.main --excel ./data/project_data.xlsx
+# Basic execution
+python -m cli.main --excel ./data/project.xlsx
 
+# Advanced execution with custom settings
+python -m cli.main --excel data.xlsx --output ./results --time_limit 600 --tasks_per_page 40
 ```
 
-### Advanced Usage
+---
 
-Customize the output location, solver time limit, and visualization settings:
+## 🛠 Project Control Flow
 
-```bash
-python -m cli.main \
-    --excel ./data/large_project.xlsx \
-    --output ./my_results \
-    --time_limit 600 \
-    --tasks_per_page 50
+The project follows a strict linear control flow managed by the `RCPSPOrchestrator`.
 
-```
+### 1. Entry Point (`cli/main.py`)
+* **Function**: Parses command-line arguments and initializes configurations (`ModelConfig`, `OutputConfig`, `VisualizationConfig`).
+* **Action**: Instantiates the `RCPSPOrchestrator` and triggers the `run()` method with the provided Excel path.
 
-### CLI Arguments
+### 2. Orchestration Layer (`orchestration/orchestrator.py`)
+This is the "brain" of the application that manages the following lifecycle:
+1.  **Load**: Uses `ExcelDataLoader` to detect the Excel format (PSPLIB, Multi-sheet, or Single-sheet) and transform it into a standard `ProjectData` object.
+2.  **Validate**: Calls `DataValidator` to ensure no circular dependencies exist and resource requests are feasible.
+3.  **Pre-Solve Visualization**: Generates a `Program_Flowchart.png` (Network Diagram).
+4.  **Solve**: Delegates to `RCPSPSolver` to find the start times for every task.
+5.  **Post-Solve Visualization**: Triggers the `GanttChartRenderer`, `ResourceUtilizationRenderer`, and `SummaryMetricsRenderer`.
+6.  **Export**: Saves final schedules to Excel and machine-readable JSON formats.
 
-| Argument | Type | Required | Default | Description |
-| --- | --- | --- | --- | --- |
-| `--excel` | string | **Yes** | N/A | Path to the input Excel file (.xlsx). |
-| `--output` | string | No | `./output` | Base directory where results and charts will be saved. |
-| `--time_limit` | int | No | `300` | Solver timeout in seconds. If the limit is reached, the best solution found so far is returned. |
-| `--tasks_per_page` | int | No | `60` | Number of tasks to display per Gantt chart image. Useful for keeping charts readable. |
+### 3. Solver Logic (`solver/rcpsp_solver.py`)
+* **Strategy Selection**: Analyzes task count to choose between Exact, Hybrid, or Heuristic modes.
+* **MILP Building**: If using MILP, it calculates CPM bounds (Earliest Start) to prune the time-indexed variables ($x_{a,t}$).
+* **Verification Pass**: After the solver finishes, it re-verifies the schedule. If CBC timed out and produced a corrupt or partial result, it automatically discards it and falls back to a guaranteed-feasible Greedy solution.
 
-## 📊 Input Data Formats
+---
 
-The solver automatically detects the format based on the Excel sheet names.
+## 📂 File Directory Breakdown
 
-### 1. PSPLIB Format (Recommended)
+| Directory | Key File | Responsibility |
+| :--- | :--- | :--- |
+| **`cli/`** | `main.py` | CLI argument parsing and high-level setup. |
+| **`config/`** | `model_config.py` | Defines solver timeouts, dummy task IDs, and model constants. |
+| **`input/`** | `excel_parser.py` | Auto-detects and parses various Excel formats into data models. |
+| **`models/`** | `project_data.py` | Core dataclasses for Activities, Resources, and Projects. |
+| **`orchestration/`**| `orchestrator.py` | Executes the sequential workflow from load to export. |
+| **`solver/`** | `rcpsp_solver.py` | Contains the MILP formulation and tiered strategy selection. |
+| **`validation/`** | `cycle_detector.py`| Implements Kahn's algorithm for precedence integrity. |
+| **`visualization/`**| `gantt_renderer.py`| Handles paged Gantt chart rendering using Matplotlib. |
 
-Based on the standard academic format. Requires the following sheets:
+---
 
-* **Project Info**: General project metadata.
-* **Resource Avail**: Available capacity for each resource.
-* **Requests**: Resource consumption per activity.
-* **Precedence**: Successor/Predecessor relationships.
+## 📊 Outputs
+Results are saved in a folder named `<input_filename>_<timestamp>/`:
+* **`RCPSP_Results_*.xlsx`**: Final start/finish times for all tasks.
+* **`Gantt_Chart_*.png`**: Readable project schedules.
+* **`Resource_Profile.png`**: Time-phased resource usage vs. capacity.
+* **`Program_Flowchart.png`**: Network dependency diagram.
 
-### 2. Multi-Sheet Format
-
-A simplified relational format.
-
-* **Activities**: Columns for `ActivityID`, `Duration`, and Resource demands (e.g., `Res1`, `Res2`).
-* **Precedence**: Columns for `Predecessor` and `Successor`.
-
-### 3. Single-Sheet Format
-
-All data in one sheet. Expects columns for ID, Duration, Predecessors (comma-separated), and Resources.
-
-## 📁 Outputs
-
-For every execution, a timestamped run directory is created (e.g., `output/run_20231027_103000/`) containing:
-
-1. **`RCPSP_Results_*.xlsx`**: Complete schedule, start/finish times, and metrics in Excel format.
-2. **`Gantt_Chart_*_P1.png`**: High-resolution Gantt charts (split into P1, P2... if the project is large).
-3. **`Resource_Profile.png`**: Graphs showing resource usage vs. capacity over time.
-4. **`Program_Flowchart.png`**: Visual network diagram of task dependencies.
-5. **`Summary_Metrics.png`**: Key performance indicators (Makespan, CPU time).
-6. **`RCPSP_Summary.json`**: Machine-readable results for integration with other tools.
-
-## ⚙️ Configuration
-
-While CLI arguments control runtime parameters, internal logic is managed via configuration classes in the `config/` directory:
-
-* **`model_config.py`**: Constants for the MILP model (Big-M, dummy activity names).
-* **`visualization_config.py`**: DPI settings, bar heights, colors, and chart dimensions.
-* **`output_config.py`**: Naming conventions for output files.
-
-## 🛠 Architecture & Workflow
-
-The `RCPSPOrchestrator` manages the end-to-end process:
-
-1. **Load**: `ExcelDataLoader` identifies the schema and converts Excel data into standard `ProjectData` objects.
-2. **Validate**: `DataValidator` checks for circular dependencies (cycles) and impossible resource requests.
-3. **Visualize (Pre)**: `FlowchartGenerator` draws the project network.
-4. **Solve**: `RCPSPSolver` builds a MILP model:
-* *Variables*: Binary variables  (task  starts at time ).
-* *Constraints*: Precedence enforcement and Resource capacity limits.
-* *Objective*: Minimize  (Makespan).
-
-
-5. **Visualize (Post)**: `GanttRenderer` and `MetricsRenderer` generate charts based on the optimal schedule.
-6. **Export**: Results are serialized to Excel and JSON.
-
-## 🤝 Contributing
-
-1. Fork the repository.
-2. Create a feature branch (`git checkout -b feature/NewHeuristic`).
-3. Commit your changes.
-4. Push to the branch.
-5. Open a Pull Request.
+---
 
 ## 📝 License
-
-This project is open-source and available under the MIT License.
+This project is open-source and available under the **MIT License**.
